@@ -1,0 +1,1 @@
+var taskDefinitionId = $.info.taskDefinitionId;
