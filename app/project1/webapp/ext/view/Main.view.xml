@@ -1,0 +1,36 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" 
+    xmlns:l="sap.ui.layout" xmlns:u="sap.ui.unified"  class="viewPadding"
+    xmlns:html="http://www.w3.org/1999/xhtml"  controllerName="project1.ext.controller.Main" >
+
+ 
+		<u:FileUploader
+			id="fileUploader"
+			change="_onFileChange"
+			sameFilenameAllowed="false"
+			uploadComplete="handleUploadComplete"
+			tooltip="Upload sap file from local server"
+            placeholder="Choose a SAP file...">
+	    </u:FileUploader>
+
+		<FlexBox id="_IDGenFlexBox1"
+				height="100px"
+				justifyContent="Start">
+
+		<Button id="_IDGenButton1"
+			text="Upload SAP File"
+			visible="false"
+			press="handleUploadPress"/>
+
+		<Button id="_IDGenButton2"
+			text="Upload ECOMM File"
+			icon="sap-icon://cart" 
+			type="Accept" 
+			press="handleUploadPressEcomm"/>
+        
+	    <Button id="_IDGenButton3"
+			text="Reconcile"
+			visible="false"
+			press="handleProcedure"/>	
+	    </FlexBox>	
+
+</mvc:View>

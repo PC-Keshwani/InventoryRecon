@@ -1,0 +1,62 @@
+{
+  "name": "Inventryrecon",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/approuter": "^16.2.1",
+    "@sap/cds": "^7.7.2",
+    "@sap/cds-dk": "^7.7.2",
+    "@sap/cds-hana": "^2",
+    "@sap/hana-client": "^2.20.15",
+    "@sap/xsenv": "^4.2.0",
+    "@sap/xssec": "^3.6.1",
+    "express": "^4",
+    "hdb": "^0.19.7",
+    "passport": "^0.7.0",
+    "sqlite": "^3.0.6"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^7",
+    "@sap/hdi-deploy": "^4.9.2",
+    "@sap/ux-specification": "^1.120.6"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch-project1": "cds watch --open project1/webapp/index.html?sap-ui-xx-viewCache=false"
+  },
+  "cds": {
+    "hana": {
+      "deploy-format": "hdbtable"
+    },
+    "requires": {
+      "uaa": {
+        "kind": "xsuaa"
+      },
+      "auth": {
+        "[production]": {
+          "strategy": "JWT"
+        },
+        "[development]": {
+          "strategy": "mock",
+          "users": {
+            "prashant.keshwani@groupsoftus.com": {
+              "roles": [
+                "admin"
+              ]
+            }
+          }
+        }
+      },
+      "db": {
+        "kind": "hana"
+      }
+    }
+  },
+  "sapux": [
+    "app/project1"
+  ]
+}

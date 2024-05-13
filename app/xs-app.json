@@ -1,0 +1,22 @@
+{
+    "welcomeFile": "project1/webapp/",
+    "authenticationMethod": "none",
+    "routes": [
+        {
+            "source": "^/project1/webapp/(.*)$",
+            "target": "$1",
+            "csrfProtection": false,
+            "localDir": "project1/webapp/"
+        },
+        {
+            "source": "^/wf_dest/(.*)$",
+            "target": "$1",
+            "destination": "sap_wf"
+        },
+        {
+            "source": "^/(.*)",
+            "csrfProtection": false,
+            "destination": "srv-api"
+        }
+    ]
+}

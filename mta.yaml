@@ -1,0 +1,66 @@
+_schema-version: '3.1'
+ID: Inventryrecon
+version: 1.1.9
+description: A simple CAP project.
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npx -p @sap/cds-dk cds build --production
+modules:
+  - name: Inventryrecon-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: '${default-url}'
+    requires:
+      - name: Inventryrecon-db
+  - name: Inventryrecon-ui
+    type: nodejs
+    path: app
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api
+          strictSSL: true
+          forwardAuthToken: true
+          url: '~{srv-url}'
+      - name: Inventryrecon-db
+      - name: default_destination 
+      - name: default_connectivity
+
+  - name: Inventryrecon-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: Inventryrecon-db
+
+resources:
+  - name: Inventryrecon-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+    properties:
+      hdi-service-name: '${service-name}'
+  - name: default_destination
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service: destination   
+      service-plan: lite
+  - name: default_connectivity
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service: connectivity   
+      service-plan: lite

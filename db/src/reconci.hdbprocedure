@@ -1,0 +1,27 @@
+PROCEDURE "reconci"()
+   LANGUAGE SQLSCRIPT
+   AS
+BEGIN
+
+    lt_final = SELECT S."MATERIAL", S."QUANTITY", (S."QUANTITY" - E."QUANTITY") as diff, 'B' as stat
+                FROM "INVREC_DB_TRANSACTIONAL_SAP_MAT" as S
+                INNER JOIN "INVREC_DB_TRANSACTIONAL_ECOMM_MAT" as E
+                on S."MATERIAL" = E."MATERIAL"
+                union
+		select S."MATERIAL", S."QUANTITY" , 0 as diff, 'S' as stat
+		FROM "INVREC_DB_TRANSACTIONAL_SAP_MAT" as S
+                LEFT JOIN "INVREC_DB_TRANSACTIONAL_ECOMM_MAT" as E
+                on S."MATERIAL" = E."MATERIAL"
+                where E."MATERIAL" is null
+                union
+		select E."MATERIAL", E."QUANTITY" , 0 as diff, 'E' as stat
+		FROM "INVREC_DB_TRANSACTIONAL_ECOMM_MAT" as E
+                LEFT JOIN "INVREC_DB_TRANSACTIONAL_SAP_MAT" as S
+                on E."MATERIAL" = S."MATERIAL"  
+                where S."MATERIAL" is null;
+
+       DELETE FROM "INVREC_DB_TRANSACTIONAL_FINAL_LIST" ;
+       INSERT INTO "INVREC_DB_TRANSACTIONAL_FINAL_LIST" ("MATERIAL", "QUANTITY", "DIFF", "STAT")
+        SELECT MATERIAL, QUANTITY, DIFF, STAT from :lt_final;
+
+END
